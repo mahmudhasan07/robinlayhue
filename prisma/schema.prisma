@@ -22,9 +22,10 @@ model User {
   password  String
   fcmToken  String?
   image     String?
-  latitude  Float
-  longitude Float
-  location  String
+  latitude  Float?
+  longitude Float?
+  location  String?
+  isVerified Boolean         @default(false)
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   receiver  Notifications[] @relation("receiverDetails")
@@ -65,12 +66,13 @@ model Booking {
   latitude       Float?
   longitude      Float?
   isPaid         Boolean     @default(false)
-  paymentId      String?
+  paymentId      String?     @db.ObjectId
   serviceDetails Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  paymentDetails Payment?    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
   status         OrderStatus @default(PENDING)
   createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  Payment        Payment[]
+  updatedAt      DateTime    @updatedAt 
+  // Payment        Payment[]
 }
 
 model Review {
@@ -86,13 +88,14 @@ model Review {
 }
 
 model Payment {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @db.ObjectId
-  amount      Float
-  bookingId   String   @db.ObjectId
-  bookDetails Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  amount    Float
+  bookingId String    @db.ObjectId
+  // bookDetails Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Booking   Booking[]
 }
 
 model Notifications {
@@ -110,6 +113,7 @@ model Notifications {
 
 enum Role {
   USER
+  WORKER
   ADMIN
 }
 
