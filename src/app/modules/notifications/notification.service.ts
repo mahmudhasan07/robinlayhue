@@ -201,7 +201,6 @@ const getNotificationsFromDB = async (req: any) => {
   if (notifications.length === 0) {
     throw new ApiError(404, "No notifications found for the user");
   }
-
   return notifications;
 };
 
