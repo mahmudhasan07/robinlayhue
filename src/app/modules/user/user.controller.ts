@@ -11,6 +11,11 @@ const createUserController = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Please check your email for verification", data: result, success: true })
 })
 
+const getAllUserController = catchAsync(async (req: Request, res: Response) => {
+    const result = await userServices.getAllUserFromDB()
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "All users", data: result, success: true })
+})
+
 
 const resetPasswordController = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body
@@ -35,4 +40,4 @@ const updateUserController = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, { statusCode: StatusCodes.OK, message: "User updated successfully", data: result, success: true })
 })
 
-export const userController = { createUserController, resetPasswordController, updateUserController, changePasswordController }
+export const userController = { createUserController, resetPasswordController, updateUserController, changePasswordController, getAllUserController }

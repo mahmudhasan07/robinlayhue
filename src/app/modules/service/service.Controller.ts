@@ -5,7 +5,6 @@ import sendResponse from "../../middleware/sendResponse";
 import { StatusCodes } from "http-status-codes";
 
 const createServiceController = catchAsync(async (req: Request, res: Response) => {
-
     const body = req.body as any
     const image = req.file as any
 
@@ -40,5 +39,12 @@ const deleteServiceController = catchAsync(async (req: Request, res: Response) =
 
 })
 
+const searchServiceController = catchAsync(async (req: Request, res: Response) => {
+    const name = req.query.name as string
+    
+    const result = await serviceServices.searchServiceFromDB(name)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "Service found successfully", data: result, success: true })
+})
 
-export const ServiceController = { createServiceController, getAllServiceController, getSingleServiceController, updateServiceController, deleteServiceController }
+
+export const ServiceController = { createServiceController, getAllServiceController, getSingleServiceController, updateServiceController, deleteServiceController, searchServiceController }

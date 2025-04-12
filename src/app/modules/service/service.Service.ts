@@ -20,12 +20,6 @@ const createServiceIntoDB = async (payload: any, image: Express.MulterS3.File) =
         data: {
             ...payload,
             image: imageUrl,
-        },
-        select: {
-            id: true,
-            name: true,
-            createdAt: true,
-            updatedAt: true
         }
     })
     return result
@@ -36,6 +30,7 @@ const getAllServiceFromDB = async () => {
         select: {
             id: true,
             name: true,
+            image: true,
             createdAt: true,
             updatedAt: true
         }
@@ -60,31 +55,23 @@ const updateServiceIntoDB = async (id: string, payload: any, image: Express.Mult
 
     const imageUrl = await getImageUrl(image)
 
-    const findService = await prisma.service.findUnique({
-        where: {
-            id
-        }
-    })
-    if (!findService) {
+    try {
+        const result = await prisma.service.update({
+            where: {
+                id
+            },
+            data: {
+                ...payload,
+                image: imageUrl ?? undefined
+            }
+        })
+        return result
+    } catch {
         throw new ApiError(StatusCodes.NOT_FOUND, "Service not found")
     }
 
-    const result = await prisma.service.update({
-        where: {
-            id
-        },
-        data: {
-            ...payload,
-            image : imageUrl ?? undefined
-        },
-        select: {
-            id: true,
-            name: true,
-            createdAt: true,
-            updatedAt: true
-        }
-    })
-    return result
+
+
 }
 
 const deleteServiceFromDB = async (id: string) => {
@@ -101,4 +88,19 @@ const deleteServiceFromDB = async (id: string) => {
     }
 }
 
-export const serviceServices = { createServiceIntoDB, getAllServiceFromDB, getSingleServiceFromDB, updateServiceIntoDB, deleteServiceFromDB }
+
+const searchServiceFromDB = async (name : string) => {
+    const result = await prisma.service.findMany({
+        where: {
+            name: {
+                contains: name,
+                mode: 'insensitive'
+            }
+        }
+    })
+
+    return result
+}
+
+
+export const serviceServices = { createServiceIntoDB, getAllServiceFromDB, getSingleServiceFromDB, updateServiceIntoDB, deleteServiceFromDB, searchServiceFromDB }

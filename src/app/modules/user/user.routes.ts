@@ -13,6 +13,7 @@ route.post('/create', validateRequest(UserValidation.createValidation), userCont
 
 route.put('/reset-password', userController.resetPasswordController)
 route.put('/change-password', auth(Role.USER || Role.ADMIN), validateRequest(UserValidation.changePasswordValidation), userController.changePasswordController)
+route.get('/', auth(Role.ADMIN), userController.getAllUserController)
 
 route.put("/me", auth(Role.USER || Role.ADMIN), fileUploader.uploadProfileImage, parseBodyMiddleware, userController.updateUserController)
 

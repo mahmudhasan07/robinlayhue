@@ -31,7 +31,22 @@ const createUserIntoDB = async (payload: User) => {
             ...payload,
             password: newPass,
         },
-        select: {
+       
+    })
+
+    const {password, ...rest} = result
+
+    OTPFn(payload.email)
+    return rest
+}
+
+
+const getAllUserFromDB = async () => {
+    const result = await prisma.user.findMany({
+        where: {
+            role: "USER"
+        },
+        select : {
             id: true,
             name: true,
             email: true,
@@ -41,8 +56,9 @@ const createUserIntoDB = async (payload: User) => {
             updatedAt: true
         }
     })
-    OTPFn(payload.email)
-    return result
+
+  
+    return result;
 }
 
 const changePasswordIntoDB = async (id: string, payload: any) => {
@@ -92,7 +108,7 @@ const resetPasswordIntoDB = async (payload: any, token: string) => {
         data: {
             password: newPass
         },
-        select : {
+        select: {
             id: true,
             name: true,
             email: true,
@@ -139,4 +155,4 @@ const updateUserIntoDB = async (id: string, payload: any, image: any) => {
 }
 
 
-export const userServices = { createUserIntoDB, resetPasswordIntoDB, updateUserIntoDB, changePasswordIntoDB }
+export const userServices = { createUserIntoDB, resetPasswordIntoDB, updateUserIntoDB, changePasswordIntoDB, getAllUserFromDB }
