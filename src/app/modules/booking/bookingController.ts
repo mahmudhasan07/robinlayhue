@@ -4,23 +4,32 @@ import { bookingService } from "./bookingService"
 import { Request, Response } from "express"
 import catchAsync from "../../../shared/catchAsync"
 
-const createBookingController = catchAsync(async (req : Request, res : Response) => {
+const createBookingController = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body
     const result = await bookingService.createBooking(payload)
     sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Booking created successfully", data: result, success: true })
 })
 
-const getAllBookingController = catchAsync(async (req : Request, res : Response) => {
+const getAllBookingController = catchAsync(async (req: Request, res: Response) => {
 
     const result = await bookingService.getAllServicesByStatus({ status: req.query.status as any })
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: result, success: true })
 
 })
 
-const myBookingController = catchAsync(async (req : Request, res : Response) => {
-    const {id} = req.user
+const myBookingController = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.user
     const result = await bookingService.getMyBookingService(id)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: result, success: true })
 })
 
-export const bookingController = { createBookingController, getAllBookingController, myBookingController }
+const assignBookingController = catchAsync(async (req: Request, res: Response) => {
+    const payload = req.body
+    const result = await bookingService.assignServiceToBooking(payload)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking updated successfully", data: result, success: true })
+})
+
+
+
+
+export const bookingController = { createBookingController, getAllBookingController, myBookingController, assignBookingController }

@@ -1,5 +1,7 @@
 import { Booking, OrderStatus } from "@prisma/client"
 import { prisma } from "../../../utils/prisma"
+import ApiError from "../../error/ApiErrors"
+import { StatusCodes } from "http-status-codes"
 
 const createBooking = async (payload: Booking) => {
     const result = await prisma.booking.create({
@@ -37,5 +39,22 @@ const getSingleBooking = async (id: string) => {
     return result
 }
 
+const assignServiceToBooking = async (payload: { bookingId: string, assigns: string[] }) => {
 
-export const bookingService = { createBooking, getAllServicesByStatus, getMyBookingService, getSingleBooking }
+    try {
+        const result = await prisma.booking.update({
+            where: {
+                id: payload.bookingId
+            },
+            data: {
+                assigns: payload.assigns
+            }
+        })
+    } catch {
+        throw new ApiError(StatusCodes.NON_AUTHORITATIVE_INFORMATION, "Booking not found")
+    }
+
+}
+
+
+export const bookingService = { createBooking, getAllServicesByStatus, getMyBookingService, getSingleBooking, assignServiceToBooking }

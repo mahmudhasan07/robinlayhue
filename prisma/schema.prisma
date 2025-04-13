@@ -32,7 +32,6 @@ model User {
   sender     Notifications[] @relation("senderDetails")
   Review     Review[]
   Booking    Booking[]
-  Assign     Assign[]
 }
 
 model Otp {
@@ -57,7 +56,6 @@ model Service {
   updatedAt   DateTime  @updatedAt
   Review      Review[]
   Booking     Booking[]
-  Assign      Assign[]
 }
 
 model Booking {
@@ -70,6 +68,7 @@ model Booking {
   latitude       Float?
   longitude      Float?
   isPaid         Boolean     @default(false)
+  assigns        String[]    @default([])
   // paymentId      String?     @db.ObjectId
   serviceDetails Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   // paymentDetails Payment?    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
@@ -89,16 +88,6 @@ model Payment {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   // Booking   Booking[]
-}
-
-model Assign {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String   @db.ObjectId
-  serviceId      String   @db.ObjectId
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  userDetails    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  serviceDetails Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 model Notifications {
