@@ -2,8 +2,8 @@ import { Router } from "express";
 import auth from "../../middleware/auth";
 import { Role } from "@prisma/client";
 import validateRequest from "../../middleware/validateRequest";
-import { bookingController } from "./bookingController";
-import { bookingValidation } from "./bookingValidation";
+import { bookingController } from "./booking.controller";
+import { bookingValidation } from "./booking.validation";
 
 const route = Router()
 

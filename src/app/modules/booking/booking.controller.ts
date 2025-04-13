@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes"
 import sendResponse from "../../middleware/sendResponse"
-import { bookingService } from "./bookingService"
+import { bookingService } from "./booking.service"
 import { Request, Response } from "express"
 import catchAsync from "../../../shared/catchAsync"
 
