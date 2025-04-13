@@ -29,7 +29,13 @@ const assignBookingController = catchAsync(async (req: Request, res: Response) =
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking updated successfully", data: result, success: true })
 })
 
+const completeBookingController = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params
+    const result = await bookingService.completeBooking(id)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking completed successfully", data: result, success: true })
+})
 
 
 
-export const bookingController = { createBookingController, getAllBookingController, myBookingController, assignBookingController }
+
+export const bookingController = { createBookingController, getAllBookingController, myBookingController, assignBookingController, completeBookingController }

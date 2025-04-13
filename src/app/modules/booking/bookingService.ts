@@ -57,4 +57,17 @@ const assignServiceToBooking = async (payload: { bookingId: string, assigns: str
 }
 
 
-export const bookingService = { createBooking, getAllServicesByStatus, getMyBookingService, getSingleBooking, assignServiceToBooking }
+const completeBooking = async (id: string) => {
+    const result = await prisma.booking.update({
+        where: {
+            id: id
+        },
+        data: {
+            status: "COMPLETED"
+        }
+    })
+    return result
+}
+
+
+export const bookingService = { createBooking, getAllServicesByStatus, getMyBookingService, getSingleBooking, assignServiceToBooking , completeBooking}
