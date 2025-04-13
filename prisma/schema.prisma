@@ -31,6 +31,8 @@ model User {
   receiver   Notifications[] @relation("receiverDetails")
   sender     Notifications[] @relation("senderDetails")
   Review     Review[]
+  Booking    Booking[]
+  Assign     Assign[]
 }
 
 model Otp {
@@ -55,11 +57,12 @@ model Service {
   updatedAt   DateTime  @updatedAt
   Review      Review[]
   Booking     Booking[]
+  Assign      Assign[]
 }
 
 model Booking {
   id             String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String
+  userId         String      @db.ObjectId
   serviceId      String      @db.ObjectId
   date           DateTime
   description    String
@@ -67,36 +70,35 @@ model Booking {
   latitude       Float?
   longitude      Float?
   isPaid         Boolean     @default(false)
-  paymentId      String?     @db.ObjectId
+  // paymentId      String?     @db.ObjectId
   serviceDetails Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  paymentDetails Payment?    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  // paymentDetails Payment?    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  userDetails    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   status         OrderStatus @default(PENDING)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
-  // Payment        Payment[]
-}
-
-model Review {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String   @db.ObjectId
-  serviceId      String   @db.ObjectId
-  rating         Float
-  comment        String?
-  serviceDetails Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  userDetails    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  Payment        Payment[]
 }
 
 model Payment {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String    @db.ObjectId
-  amount    Float
-  bookingId String    @db.ObjectId
-  // bookDetails Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Booking   Booking[]
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  amount      Float
+  bookingId   String   @db.ObjectId
+  bookDetails Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Booking   Booking[]
+}
+
+model Assign {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String   @db.ObjectId
+  serviceId      String   @db.ObjectId
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  userDetails    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceDetails Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 model Notifications {
@@ -110,6 +112,18 @@ model Notifications {
   updatedAt  DateTime @updatedAt
   receiver   User     @relation("receiverDetails", fields: [receiverId], references: [id])
   sender     User?    @relation("senderDetails", fields: [senderId], references: [id])
+}
+
+model Review {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String   @db.ObjectId
+  serviceId      String   @db.ObjectId
+  rating         Float
+  comment        String?
+  serviceDetails Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  userDetails    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 enum Role {
