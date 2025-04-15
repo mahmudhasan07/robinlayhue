@@ -25,6 +25,7 @@ model User {
   latitude   Float?
   longitude  Float?
   location   String?
+  customerId String?         @unique
   isVerified Boolean         @default(false)
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
@@ -80,13 +81,14 @@ model Booking {
 }
 
 model Payment {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @db.ObjectId
-  amount      Float
-  bookingId   String   @db.ObjectId
-  bookDetails Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  amount        Float
+  bookingId     String   @db.ObjectId
+  paymentMethod String?
+  bookDetails   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   // Booking   Booking[]
 }
 

@@ -53,7 +53,7 @@ const getSingleServiceFromDB = async (id: string) => {
 
 const updateServiceIntoDB = async (id: string, payload: any, image: Express.MulterS3.File) => {
 
-    const imageUrl = await getImageUrl(image)
+    const imageUrl = image && await getImageUrl(image)
 
     try {
         const result = await prisma.service.update({
@@ -69,9 +69,6 @@ const updateServiceIntoDB = async (id: string, payload: any, image: Express.Mult
     } catch {
         throw new ApiError(StatusCodes.NOT_FOUND, "Service not found")
     }
-
-
-
 }
 
 const deleteServiceFromDB = async (id: string) => {
@@ -89,7 +86,7 @@ const deleteServiceFromDB = async (id: string) => {
 }
 
 
-const searchServiceFromDB = async (name : string) => {
+const searchServiceFromDB = async (name: string) => {
     const result = await prisma.service.findMany({
         where: {
             name: {

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const createBookingValidation = z.object({
-    bookingId: z.string().uuid(),
+    serviceId: z.string(),
     date: z.string().refine((date) => !isNaN(Date.parse(date))),
     description: z.string(),
     location: z.string(),
@@ -10,7 +10,7 @@ const createBookingValidation = z.object({
 })
 
 const assignBookingValidation = z.object({
-    bookingId: z.string().uuid(),
+    bookingId: z.string(),
     assigns: z.array(z.string())
 })
 

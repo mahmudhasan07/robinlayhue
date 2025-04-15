@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import ApiError from "../../error/ApiErrors";
 import { StatusCodes } from "http-status-codes";
 import { compare, hash } from "bcrypt"
@@ -31,10 +31,10 @@ const createUserIntoDB = async (payload: User) => {
             ...payload,
             password: newPass,
         },
-       
+
     })
 
-    const {password, ...rest} = result
+    const { password, ...rest } = result
 
     OTPFn(payload.email)
     return rest
@@ -46,7 +46,7 @@ const getAllUserFromDB = async () => {
         where: {
             role: "USER"
         },
-        select : {
+        select: {
             id: true,
             name: true,
             email: true,
@@ -57,7 +57,7 @@ const getAllUserFromDB = async () => {
         }
     })
 
-  
+
     return result;
 }
 
@@ -153,6 +153,8 @@ const updateUserIntoDB = async (id: string, payload: any, image: any) => {
         throw new ApiError(StatusCodes.BAD_REQUEST, "User not found")
     }
 }
+
+
 
 
 export const userServices = { createUserIntoDB, resetPasswordIntoDB, updateUserIntoDB, changePasswordIntoDB, getAllUserFromDB }
