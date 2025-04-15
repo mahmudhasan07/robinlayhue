@@ -4,6 +4,7 @@ import { getImageUrl } from "../../helper/uploadFile"
 import ApiError from "../../error/ApiErrors"
 import { stat } from "fs"
 import { StatusCodes } from "http-status-codes"
+import { hash } from "bcrypt"
 
 const createWorker = async (payload: any, file: any) => {
     const imageUrl = file && await getImageUrl(file)
@@ -18,11 +19,14 @@ const createWorker = async (payload: any, file: any) => {
         throw new ApiError(StatusCodes.NOT_FOUND, "User already exists")
     }
 
+    const pass = await hash(payload.password, 10)
+
     const result = await prisma.user.create({
         data: {
             ...payload,
             isVerified: true,
             status: "ACTIVE",
+            password: pass,
             role: Role.WORKER,
             image: imageUrl
         }

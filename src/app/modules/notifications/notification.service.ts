@@ -13,6 +13,17 @@ const sendSingleNotification = async (senderId: string, userId: string, payload:
     where: { id: userId },
   });
 
+
+  await prisma.notifications.create({
+    data: {
+      receiverId: userId,
+      senderId: senderId,
+      title: payload.title,
+      body: payload.body,
+    },
+  });
+
+
   if (!user?.fcmToken) {
     throw new ApiError(404, "User not found with FCM token");
   }
@@ -25,14 +36,7 @@ const sendSingleNotification = async (senderId: string, userId: string, payload:
     token: user.fcmToken,
   };
 
-  await prisma.notifications.create({
-    data: {
-      receiverId: userId,
-      senderId: senderId,
-      title: payload.title,
-      body: payload.body,
-    },
-  });
+
 
   try {
     const response = await admin.messaging().send(message);
