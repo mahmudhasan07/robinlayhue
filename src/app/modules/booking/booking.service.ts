@@ -63,6 +63,7 @@ const getMyBookingService = async (userId: string) => {
             id: true,
             status: true,
             date: true,
+            isPaid : true,
             serviceDetails: {
                 select: {
                     name: true,
@@ -92,6 +93,7 @@ const getMyBookingService = async (userId: string) => {
             id: booking.id,
             status: booking.status,
             date: booking.date,
+            paid : booking.isPaid,
             name: booking.serviceDetails.name,
             image: booking.serviceDetails.image,
             duration: booking.serviceDetails.duration,

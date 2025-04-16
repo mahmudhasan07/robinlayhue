@@ -39,6 +39,7 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
     return payment;
 };
 
+
 const saveCardInStripe = async (payload: { paymentMethodId: string; cardholderName: string; }, userId: string) => {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {

@@ -4,6 +4,7 @@ import { authRoutes } from "../modules/auth/auth.routes"
 import { serviceRoutes } from "../modules/service/service.Routes"
 import { bookingRoutes } from "../modules/booking/booking.routes"
 import { workerRoutes } from "../modules/worker/worker.Routes"
+import { paymentRoutes } from "../modules/payment/payment.routes"
 // import { foodRoutes } from "../modules/foods/foods.Routes"
 // import { locationRoutes } from "../modules/location/location.Routes"
 
@@ -28,6 +29,10 @@ const routes = [
     {
         path: "/worker",
         component: workerRoutes
+    },
+    {
+        path: "/payment",
+        component: paymentRoutes
     }
 ]
 
