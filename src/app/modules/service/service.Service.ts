@@ -121,4 +121,5 @@ const searchServiceFromDB = async (name: string) => {
 }
 
 
+
 export const serviceServices = { createServiceIntoDB, getAllServiceFromDB, getSingleServiceFromDB, updateServiceIntoDB, deleteServiceFromDB, searchServiceFromDB }
