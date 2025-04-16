@@ -12,6 +12,8 @@ interface payloadType {
 }
 
 const createIntentInStripe = async (payload: payloadType, userId: string) => {
+
+
     const payment = await stripe.paymentIntents.create({
         amount: Math.round(payload.amount * 100),
         currency: payload?.paymentMethod || "usd",
@@ -22,6 +24,9 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
             allow_redirects: "never",
         },
     });
+
+    console.log(payment);
+    
 
     if (payment.status !== "succeeded") {
         throw new ApiError(StatusCodes.BAD_REQUEST, "Payment failed");
@@ -36,7 +41,16 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
         },
     });
 
-    return payment;
+   const completePayment= await prisma.booking.update({
+        where: {
+            id: payload.bookId,
+        },
+        data: {
+            isPaid: true,
+        },
+    });
+
+    return completePayment;
 };
 
 

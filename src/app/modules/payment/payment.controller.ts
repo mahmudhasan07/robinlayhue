@@ -6,7 +6,6 @@ import { StatusCodes } from "http-status-codes"
 
 const createPaymentController = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body as any
-
     const { id: userId } = req.user
 
     const result = await paymentService.createIntentInStripe(payload, userId)

@@ -25,17 +25,38 @@ const createServiceIntoDB = async (payload: any, image: Express.MulterS3.File) =
     return result
 }
 
-const getAllServiceFromDB = async () => {
+const getAllServiceFromDB = async (review: string) => {
     const result = await prisma.service.findMany({
         select: {
             id: true,
             name: true,
             image: true,
             createdAt: true,
-            updatedAt: true
+            updatedAt: true,
+            Review: true
         }
     })
-    return result
+
+    const formattedResult = result.map((item) => {
+
+        const avgReview = item.Review.reduce((acc, curr) => acc + curr.rating, 0)
+
+        return {
+            id: item.id,
+            name: item.name,
+            image: item.image,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            Review: avgReview
+        }
+    })
+
+    if (review) {
+        const sortedResult = formattedResult.filter((item) => item.Review >= 1)
+        return sortedResult
+    }
+
+    return formattedResult
 }
 
 const getSingleServiceFromDB = async (id: string) => {

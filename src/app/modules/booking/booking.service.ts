@@ -63,7 +63,7 @@ const getMyBookingService = async (userId: string) => {
             id: true,
             status: true,
             date: true,
-            isPaid : true,
+            isPaid: true,
             serviceDetails: {
                 select: {
                     name: true,
@@ -76,10 +76,10 @@ const getMyBookingService = async (userId: string) => {
         }
     })
 
-    const myService = result.map((booking) => {
+    const myService = await Promise.all(result.map(async (booking) => {
 
-        const assignUsers = booking.assigns.map((assign) => {
-            prisma.user.findMany({
+        const assignUsers = await Promise.all(booking.assigns.map(async (assign) => {
+            return await prisma.user.findMany({
                 where: {
                     id: assign
                 },
@@ -87,20 +87,24 @@ const getMyBookingService = async (userId: string) => {
                     name: true
                 }
             })
-        })
+            
+
+        }))
+
+        console.log(assignUsers);
 
         return {
             id: booking.id,
             status: booking.status,
             date: booking.date,
-            paid : booking.isPaid,
+            paid: booking.isPaid,
             name: booking.serviceDetails.name,
             image: booking.serviceDetails.image,
             duration: booking.serviceDetails.duration,
             price: booking.serviceDetails.price,
-            assigns: assignUsers
+            assigns:  assignUsers.flat()
         }
-    })
+    }))
 
     return myService
 }
