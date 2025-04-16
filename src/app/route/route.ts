@@ -2,6 +2,10 @@ import { Router } from "express"
 import { userRoutes } from "../modules/user/user.routes"
 import { authRoutes } from "../modules/auth/auth.routes"
 import { serviceRoutes } from "../modules/service/service.Routes"
+import { bookingRoutes } from "../modules/booking/booking.routes"
+import { workerRoutes } from "../modules/worker/worker.Routes"
+import { paymentRoutes } from "../modules/payment/payment.routes"
+import { reviewRoutes } from "../modules/review/review.Routes"
 // import { foodRoutes } from "../modules/foods/foods.Routes"
 // import { locationRoutes } from "../modules/location/location.Routes"
 
@@ -18,7 +22,23 @@ const routes = [
     {
         path: "/service",
         component: serviceRoutes
-    }
+    },
+    {
+        path: "/booking",
+        component: bookingRoutes
+    },
+    {
+        path: "/worker",
+        component: workerRoutes
+    },
+    {
+        path: "/payment",
+        component: paymentRoutes
+    },
+    {
+        path: "/review",
+        component: reviewRoutes
+    },
 ]
 
 routes.forEach(route => router.use(route.path, route.component))

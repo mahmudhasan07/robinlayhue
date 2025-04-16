@@ -5,14 +5,15 @@ import { Request, Response } from "express"
 import catchAsync from "../../../shared/catchAsync"
 
 const createBookingController = catchAsync(async (req: Request, res: Response) => {
+    const {id} = req.user
     const payload = req.body
-    const result = await bookingService.createBooking(payload)
+    const result = await bookingService.createBooking(payload, id)
     sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Booking created successfully", data: result, success: true })
 })
 
 const getAllBookingController = catchAsync(async (req: Request, res: Response) => {
 
-    const result = await bookingService.getAllServicesByStatus({ status: req.query.status as any })
+    const result = await bookingService.getAllBookingByStatus({ status: req.query.status as any })
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: result, success: true })
 
 })
@@ -31,7 +32,8 @@ const assignBookingController = catchAsync(async (req: Request, res: Response) =
 
 const completeBookingController = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params
-    const result = await bookingService.completeBooking(id)
+    const { id: userId } = req.user
+    const result = await bookingService.completeBooking(id, userId)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking completed successfully", data: result, success: true })
 })
 

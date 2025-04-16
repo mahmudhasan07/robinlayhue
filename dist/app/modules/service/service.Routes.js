@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.serviceRoutes = void 0;
+const express_1 = require("express");
+const auth_1 = __importDefault(require("../../middleware/auth"));
+const client_1 = require("@prisma/client");
+const service_Controller_1 = require("./service.Controller");
+const uploadFile_1 = require("../../helper/uploadFile");
+const validateRequest_1 = __importDefault(require("../../middleware/validateRequest"));
+const service_Validation_1 = require("./service.Validation");
+const parseBodyData_1 = require("../../middleware/parseBodyData");
+const route = (0, express_1.Router)();
+route.post('/create', (0, auth_1.default)(client_1.Role.ADMIN), uploadFile_1.fileUploader.serviceImage, parseBodyData_1.parseBodyMiddleware, (0, validateRequest_1.default)(service_Validation_1.ServiceValidation.ServiceCreateValidation), service_Controller_1.ServiceController.createServiceController);
+route.get("/", (0, auth_1.default)(), service_Controller_1.ServiceController.getAllServiceController);
+route.get("/:id", (0, auth_1.default)(), service_Controller_1.ServiceController.getSingleServiceController);
+route.put("/:id", (0, auth_1.default)(client_1.Role.ADMIN), uploadFile_1.fileUploader.serviceImage, parseBodyData_1.parseBodyMiddleware, (0, validateRequest_1.default)(service_Validation_1.ServiceValidation.serviceUpdateValidation), service_Controller_1.ServiceController.updateServiceController);
+route.delete("/:id", (0, auth_1.default)(client_1.Role.ADMIN), service_Controller_1.ServiceController.deleteServiceController);
+route.get("/searchService", (0, auth_1.default)(), service_Controller_1.ServiceController.searchServiceController);
+exports.serviceRoutes = route;

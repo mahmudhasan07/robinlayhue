@@ -13,7 +13,10 @@ const createServiceController = catchAsync(async (req: Request, res: Response) =
 })
 
 const getAllServiceController = catchAsync(async (req: Request, res: Response) => {
-    const result = await serviceServices.getAllServiceFromDB()
+
+    const review = req.query.review as string
+
+    const result = await serviceServices.getAllServiceFromDB(review)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "All services", data: result, success: true })
 })
 
@@ -41,7 +44,7 @@ const deleteServiceController = catchAsync(async (req: Request, res: Response) =
 
 const searchServiceController = catchAsync(async (req: Request, res: Response) => {
     const name = req.query.name as string
-    
+
     const result = await serviceServices.searchServiceFromDB(name)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Service found successfully", data: result, success: true })
 })
