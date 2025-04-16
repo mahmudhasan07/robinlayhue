@@ -14,7 +14,7 @@ const app = express();
 
 export const corsOptions = {
     origin: [
-        "http://localhost:3000",
+        "http://localhost:3001",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 const uploadPath = path.join(__dirname, "..", "uploads");
 
-// Ensure uploads folder exists
+// // Ensure uploads folder exists
 if (!fs.existsSync(uploadPath)) {
     fs.mkdirSync(uploadPath, { recursive: true });
     console.log("Uploads folder created successfully!");
