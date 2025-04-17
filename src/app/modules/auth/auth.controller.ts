@@ -24,7 +24,6 @@ const verifyOtp = catchAsync(async (req: Request, res: Response) => {
 
 })
 
-
 const forgetPasswordController = catchAsync(async (req: Request, res: Response) => {
     const result = await authService.forgetPassword(req.body);
     sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "OTP sent to your email", data: result })
