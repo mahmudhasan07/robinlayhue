@@ -10,6 +10,7 @@ const sendResponse = <T>(
       page: number;
       limit: number;
       total: number;
+      totalPage: number;
     };
     data?: T | null | undefined;
   }
@@ -19,6 +20,7 @@ const sendResponse = <T>(
     message: jsonData.message,
     meta: jsonData.meta || null || undefined,
     data: jsonData.data || null || undefined,
+    totalPage: jsonData.meta?.totalPage || null || undefined,
   });
 };
 

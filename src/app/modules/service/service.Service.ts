@@ -13,7 +13,7 @@ const createServiceIntoDB = async (payload: any, image: Express.MulterS3.File) =
         }
     })
     if (findService) {
-        throw new ApiError(StatusCodes.NOT_FOUND, "Service already exists")
+        throw new ApiError(StatusCodes.CONFLICT, "Service already exists")
     }
 
     const result = await prisma.service.create({

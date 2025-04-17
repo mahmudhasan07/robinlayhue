@@ -16,9 +16,9 @@ const verifyOtp = catchAsync(async (req: Request, res: Response) => {
     const body = req.body as any
     const token = req.headers.authorization as string
 
-    const {email} = decode(token) as any || body;
-    const payload = {...body,email}
-    
+    const { email } = decode(token) as any || body;
+    const payload = { ...body, email }
+
     const result = await authService.verifyOtp(payload);
     sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "OTP verified successfully", data: result })
 

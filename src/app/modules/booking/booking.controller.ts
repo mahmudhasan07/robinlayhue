@@ -3,6 +3,7 @@ import sendResponse from "../../middleware/sendResponse"
 import { bookingService } from "./booking.service"
 import { Request, Response } from "express"
 import catchAsync from "../../../shared/catchAsync"
+import { paginationSystem } from "../../helper/pagination"
 
 const createBookingController = catchAsync(async (req: Request, res: Response) => {
     const {id} = req.user
@@ -14,7 +15,10 @@ const createBookingController = catchAsync(async (req: Request, res: Response) =
 const getAllBookingController = catchAsync(async (req: Request, res: Response) => {
 
     const result = await bookingService.getAllBookingByStatus({ status: req.query.status as any })
-    sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: result, success: true })
+
+    const {data, limit, page, total, totalPage} = await paginationSystem(result, req)
+
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: data, success: true,  meta :{limit, page, total, totalPage} })
 
 })
 

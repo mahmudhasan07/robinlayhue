@@ -3,6 +3,7 @@ import catchAsync from "../../../shared/catchAsync";
 import { serviceServices } from "./service.Service";
 import sendResponse from "../../middleware/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import { paginationSystem } from "../../helper/pagination";
 
 const createServiceController = catchAsync(async (req: Request, res: Response) => {
     const body = req.body as any
@@ -17,7 +18,8 @@ const getAllServiceController = catchAsync(async (req: Request, res: Response) =
     const review = req.query.review as string
 
     const result = await serviceServices.getAllServiceFromDB(review)
-    sendResponse(res, { statusCode: StatusCodes.OK, message: "All services", data: result, success: true })
+
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "All services", data: result, success: true})
 })
 
 const getSingleServiceController = catchAsync(async (req: Request, res: Response) => {
