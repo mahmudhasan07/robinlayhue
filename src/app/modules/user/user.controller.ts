@@ -46,6 +46,6 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, { statusCode: StatusCodes.OK, message: "User updated successfully", data: result, success: true })
 })
 
-
+ 
 
 export const userController = { createUserController, resetPasswordController, updateUserController, changePasswordController, getAllUserController, getMyProfile }

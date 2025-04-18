@@ -25,7 +25,9 @@ const s3Storage = multerS3({
 });
 
 const imageFilter = (req: any, file: any, cb: any) => {
-  const allowedMimes = ["image/png", "image/jpeg", "image/jpg"];
+  const allowedMimes = ["image/png", "image/jpeg", "image/jpg", "image/jpg"];
+  console.log(file.mimetype);
+  
 
   if (!allowedMimes.includes(file.mimetype)) {
     return cb(new Error("Invalid file type. Only PNG, JPG, and JPEG are allowed."), false);
@@ -33,13 +35,13 @@ const imageFilter = (req: any, file: any, cb: any) => {
   cb(null, true);
 };
 
+
 // Upload image configurations
 const upload = multer(
   {
     storage: s3Storage,
     fileFilter: imageFilter, // Apply image filter 
   },
-
 );
 
 

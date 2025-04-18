@@ -125,7 +125,7 @@ const resetPasswordIntoDB = async (payload: any, token: string) => {
 const updateUserIntoDB = async (id: string, payload: any, image: any) => {
 
 
-    const userImage = await getImageUrl(image)
+    const userImage = image && await getImageUrl(image)
 
     try {
         const result = await prisma.user.update({

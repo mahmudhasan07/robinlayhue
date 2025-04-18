@@ -13,5 +13,6 @@ route.get("/", auth(Role.ADMIN), workerController.getAllWorkerController)
 route.get("/myAssign", auth(Role.WORKER), workerController.myAssignController)
 
 route.get("/:id", auth(Role.ADMIN), workerController.singleWorkerProfileController)
+route.get("/assign/:id", auth(Role.ADMIN), workerController.singleWorkerAssignsController)
 
 export const workerRoutes = route

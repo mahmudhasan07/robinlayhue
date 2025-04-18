@@ -55,9 +55,6 @@ const getAllWorker = async () => {
 
 const myAssignService = async (id: string, status: string) => {
 
-    console.log(status);
-
-
     const result = await prisma.booking.findMany({
         where: {
             assigns: {
@@ -89,6 +86,7 @@ const singleWorkerProfile = async (id: string) => {
             id : true,
             name : true,
             email : true,
+            image : true,
             location : true
         }
     })
@@ -97,26 +95,31 @@ const singleWorkerProfile = async (id: string) => {
         throw new ApiError(StatusCodes.NOT_FOUND, "User not found") 
     }
 
-    const myBooking = await prisma.booking.findMany({
+
+    return myUser
+}
+
+const workersAssign = async (id : string, status : string) => {
+    const result = await prisma.booking.findMany({
         where: {
-            assigns : {
-                has : id
-            }
+            assigns: {
+                has: id
+            },
+            status: status.toUpperCase() as OrderStatus
         },
-        select:{
-            userDetails :{
-                select : {
-                    name : true,
-                    location : true
+        include: {
+            userDetails: {
+                select: {
+                    name: true,
                 }
             },
-            date : true
         }
+
+
     })
-
-
-    return {myUser, myBooking}
+    return result
 }
 
 
-export const workerService = { createWorker, getAllWorker, myAssignService, singleWorkerProfile }
+
+export const workerService = { createWorker, getAllWorker, myAssignService, singleWorkerProfile, workersAssign }
