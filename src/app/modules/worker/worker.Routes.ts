@@ -12,4 +12,6 @@ route.post("/create", auth(Role.ADMIN), fileUploader.uploadProfileImage, parseBo
 route.get("/", auth(Role.ADMIN), workerController.getAllWorkerController)
 route.get("/myAssign", auth(Role.WORKER), workerController.myAssignController)
 
+route.get("/:id", auth(Role.ADMIN), workerController.singleWorkerProfileController)
+
 export const workerRoutes = route

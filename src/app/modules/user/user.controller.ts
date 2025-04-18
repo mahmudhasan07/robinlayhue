@@ -40,6 +40,12 @@ const updateUserController = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, { statusCode: StatusCodes.OK, message: "User updated successfully", data: result, success: true })
 })
 
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.user
+    const result = await userServices.getMyProfile(id)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "User updated successfully", data: result, success: true })
+})
 
 
-export const userController = { createUserController, resetPasswordController, updateUserController, changePasswordController, getAllUserController }
+
+export const userController = { createUserController, resetPasswordController, updateUserController, changePasswordController, getAllUserController, getMyProfile }

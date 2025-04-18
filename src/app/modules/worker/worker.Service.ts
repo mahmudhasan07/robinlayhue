@@ -78,4 +78,45 @@ const myAssignService = async (id: string, status: string) => {
     return result
 }
 
-export const workerService = { createWorker, getAllWorker, myAssignService }
+
+const singleWorkerProfile = async (id: string) => {
+
+    const myUser = await prisma.user.findUnique({
+        where: {
+            id
+        },
+        select : {
+            id : true,
+            name : true,
+            email : true,
+            location : true
+        }
+    })
+
+    if (!myUser) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "User not found") 
+    }
+
+    const myBooking = await prisma.booking.findMany({
+        where: {
+            assigns : {
+                has : id
+            }
+        },
+        select:{
+            userDetails :{
+                select : {
+                    name : true,
+                    location : true
+                }
+            },
+            date : true
+        }
+    })
+
+
+    return {myUser, myBooking}
+}
+
+
+export const workerService = { createWorker, getAllWorker, myAssignService, singleWorkerProfile }

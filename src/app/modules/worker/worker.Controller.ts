@@ -37,4 +37,10 @@ const myAssignController = catchAsync(async (req: Request, res: Response) => {
 })
 
 
-export const workerController = { createWorkerController, getAllWorkerController, myAssignController }
+const singleWorkerProfileController = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params
+    const result = await workerService.singleWorkerProfile(id)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "All users", data: result, success: true })
+})
+
+export const workerController = { createWorkerController, getAllWorkerController, myAssignController, singleWorkerProfileController }
