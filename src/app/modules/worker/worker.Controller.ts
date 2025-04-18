@@ -3,6 +3,7 @@ import catchAsync from "../../../shared/catchAsync"
 import sendResponse from "../../middleware/sendResponse"
 import { workerService } from "./worker.Service"
 import { Request, Response } from "express"
+import { paginationSystem } from "../../helper/pagination"
 
 const createWorkerController = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body
@@ -12,9 +13,28 @@ const createWorkerController = catchAsync(async (req: Request, res: Response) =>
 })
 
 const getAllWorkerController = catchAsync(async (req: Request, res: Response) => {
+
+    const meta = req.query.meta as string
+
     const result = await workerService.getAllWorker()
+
+    if (meta === "true") {
+        const { data, limit, page, total, totalPage } = await paginationSystem(result, req)
+        sendResponse(res, { statusCode: StatusCodes.OK, message: "All users", data: data, success: true, meta: { limit, page, total, totalPage } })
+        return
+    }
+
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "All users", data: result, success: true })
+})
+
+const myAssignController = catchAsync(async (req: Request, res: Response) => {
+
+    const status = req.query.status as string
+
+    const { id } = req.user
+    const result = await workerService.myAssignService(id, status)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "All users", data: result, success: true })
 })
 
 
-export const workerController = { createWorkerController, getAllWorkerController }
+export const workerController = { createWorkerController, getAllWorkerController, myAssignController }

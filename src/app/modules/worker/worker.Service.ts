@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client"
+import { OrderStatus, Role } from "@prisma/client"
 import { prisma } from "../../../utils/prisma"
 import { getImageUrl } from "../../helper/uploadFile"
 import ApiError from "../../error/ApiErrors"
@@ -50,4 +50,30 @@ const getAllWorker = async () => {
     return result
 }
 
-export const workerService = { createWorker, getAllWorker }
+
+const myAssignService = async (id: string, status: string) => {
+
+    console.log(status);
+
+
+    const result = await prisma.booking.findMany({
+        where: {
+            assigns: {
+                has: id
+            },
+            status: status.toUpperCase() as OrderStatus
+        },
+        include: {
+            userDetails: {
+                select: {
+                    name: true,
+                }
+            },
+        }
+
+
+    })
+    return result
+}
+
+export const workerService = { createWorker, getAllWorker, myAssignService }

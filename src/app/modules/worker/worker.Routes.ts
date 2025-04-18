@@ -10,6 +10,6 @@ import { WorkerValidation } from "./worker.Validation"
 const route = Router()
 route.post("/create", auth(Role.ADMIN), fileUploader.uploadProfileImage, parseBodyMiddleware, validateRequest(WorkerValidation.createWorkerValidation), workerController.createWorkerController)
 route.get("/", auth(Role.ADMIN), workerController.getAllWorkerController)
-
+route.get("/myAssign", auth(Role.WORKER), workerController.myAssignController)
 
 export const workerRoutes = route
