@@ -36,7 +36,7 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
         data: {
             userId: userId,
             amount: payload.amount,
-            paymentMethod: payload.paymentMethod,
+            paymentMethodId: payload.paymentMethod,
             bookingId: payload.bookId,
         },
     });

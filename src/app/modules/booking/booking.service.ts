@@ -13,10 +13,10 @@ const createBooking = async (payload: Booking, id: string) => {
     return result
 }
 
-const getAllBookingByStatus = async (payload: { status: OrderStatus }) => {
+const getAllBookingByStatus = async ( payload: { status: OrderStatus }) => {
     const result = await prisma.booking.findMany({
         where: {
-            status: payload.status
+            status: payload.status.toUpperCase() as OrderStatus
         },
         include: {
             userDetails: {
@@ -87,7 +87,7 @@ const getMyBookingService = async (userId: string) => {
                     name: true
                 }
             })
-            
+
 
         }))
 
@@ -102,7 +102,7 @@ const getMyBookingService = async (userId: string) => {
             image: booking.serviceDetails.image,
             duration: booking.serviceDetails.duration,
             price: booking.serviceDetails.price,
-            assigns:  assignUsers.flat()
+            assigns: assignUsers.flat()
         }
     }))
 
@@ -126,7 +126,8 @@ const assignServiceToBooking = async (payload: { bookingId: string, assigns: str
                 id: payload.bookingId
             },
             data: {
-                assigns: payload.assigns
+                assigns: payload.assigns,
+                status: "PROGRESSING"
             }
         })
 

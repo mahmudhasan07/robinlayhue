@@ -43,6 +43,8 @@ const getAllWorker = async () => {
             id: true,
             name: true,
             image: true,
+            location: true,
+            email: true,
             createdAt: true,
             updatedAt: true
         }

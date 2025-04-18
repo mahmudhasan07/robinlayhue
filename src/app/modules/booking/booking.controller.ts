@@ -15,12 +15,21 @@ const createBookingController = catchAsync(async (req: Request, res: Response) =
 const getAllBookingController = catchAsync(async (req: Request, res: Response) => {
 
     const result = await bookingService.getAllBookingByStatus({ status: req.query.status as any })
-
     const {data, limit, page, total, totalPage} = await paginationSystem(result, req)
 
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: data, success: true,  meta :{limit, page, total, totalPage} })
 
 })
+// const getAllBookingController = catchAsync(async (req: Request, res: Response) => {
+//     const options = req.query; 
+    
+//     const result = await bookingService.getAllBookingByStatus(options as any)
+
+//     // const data = await paginationSystem(result, req)
+
+//     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: result, success: true, })
+
+// })
 
 const myBookingController = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.user
