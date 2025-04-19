@@ -17,6 +17,7 @@ route.get('/', auth(Role.ADMIN), userController.getAllUserController)
 
 route.put("/me", auth(), fileUploader.uploadProfileImage, parseBodyMiddleware, userController.updateUserController)
 route.get("/me", auth(), userController.getMyProfile)
+route.get("/admin", auth(Role.ADMIN), userController.AdminDetails)
 
 
 export const userRoutes = route

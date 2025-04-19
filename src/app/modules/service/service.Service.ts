@@ -31,6 +31,7 @@ const getAllServiceFromDB = async (review: string) => {
             id: true,
             name: true,
             image: true,
+            price: true,
             createdAt: true,
             updatedAt: true,
             Review: true
@@ -46,8 +47,10 @@ const getAllServiceFromDB = async (review: string) => {
             name: item.name,
             image: item.image,
             createdAt: item.createdAt,
+            price: item.price,
             updatedAt: item.updatedAt,
-            Review: avgReview
+            Review: avgReview,
+            totalReview: item.Review.length
         }
     })
 
@@ -65,10 +68,54 @@ const getSingleServiceFromDB = async (id: string) => {
             id
         },
         include: {
-            Review: true
+            Review: {
+                include: {
+                    userDetails: {
+                        select: {
+                            name: true,
+                            image: true
+                        }
+                    }
+                }
+            }
         }
     })
-    return result
+
+    if (!result) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "Service not found")
+    }
+
+    const avgRating = await prisma.review.aggregate({
+        where: {
+            serviceId: id
+        },
+        _avg: {
+            rating: true
+        }
+    })
+
+    const reviewDetails = await Promise.all(result.Review.map(async (item) => {
+
+        return {
+            id: item.id,
+            rating: item.rating,
+            comment: item.comment,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            userName: item.userDetails.name,
+            userImage: item.userDetails.image
+        }
+    }))
+
+
+    const { Review, ...withoutReview } = result
+
+
+
+    return {
+        ...withoutReview, avgRating: avgRating._avg.rating, Review: reviewDetails
+    }
+    // return { ...result, avgReview: singleService, totalReview }
 }
 
 

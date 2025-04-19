@@ -90,9 +90,7 @@ const getMyBookingService = async (userId: string) => {
 
 
         }))
-
-        console.log(assignUsers);
-
+        
         return {
             id: booking.id,
             status: booking.status,

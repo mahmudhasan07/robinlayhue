@@ -5,8 +5,10 @@ const createBookingValidation = z.object({
     date: z.string().refine((date) => !isNaN(Date.parse(date))),
     description: z.string(),
     location: z.string(),
-    latitude: z.number(),
-    longitude: z.number(),
+    // latitude: z.number(),
+    // longitude: z.number(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
 })
 
 const assignBookingValidation = z.object({

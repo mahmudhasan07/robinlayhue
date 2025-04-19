@@ -24,8 +24,6 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
             allow_redirects: "never",
         },
     });
-
-    console.log(payment);
     
 
     if (payment.status !== "succeeded") {

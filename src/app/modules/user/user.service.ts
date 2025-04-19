@@ -51,6 +51,7 @@ const getAllUserFromDB = async () => {
             name: true,
             email: true,
             role: true,
+            location: true,
             status: true,
             createdAt: true,
             updatedAt: true
@@ -157,7 +158,7 @@ const updateUserIntoDB = async (id: string, payload: any, image: any) => {
 
 const getMyProfile = async (id: string) => {
 
-    const result = await prisma.user.findUnique({    
+    const result = await prisma.user.findUnique({
         where: {
             id
         },
@@ -177,4 +178,30 @@ const getMyProfile = async (id: string) => {
 }
 
 
-export const userServices = { createUserIntoDB, resetPasswordIntoDB, updateUserIntoDB, changePasswordIntoDB, getAllUserFromDB, getMyProfile }
+const Details = async () => {
+
+    const userResult = await prisma.user.findMany({
+        where: {
+            role: "USER"
+        }
+    })
+
+    const workerResult = await prisma.user.findMany({
+        where: {
+            role: "WORKER"
+        }
+    })
+
+    const totalEarn = await prisma.payment.aggregate({
+        _sum: {
+            amount: true
+        }
+
+    })
+
+    return { totalUser: userResult.length, totalWorker: workerResult.length, totalEarn: totalEarn._sum.amount }
+
+}
+
+
+export const userServices = { createUserIntoDB, resetPasswordIntoDB, updateUserIntoDB, changePasswordIntoDB, getAllUserFromDB, getMyProfile, Details }

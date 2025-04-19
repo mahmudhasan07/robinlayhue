@@ -2,10 +2,6 @@ import { prisma } from "../../../utils/prisma"
 
 const createReviewInDB = async (payload: { serviceId: string, rating: number, comment: string }, userId: string) => {
 
-
-    console.log(payload);
-    
-
     const result = await prisma.review.create({
         data: {
             ...payload,

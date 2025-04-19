@@ -24,4 +24,3 @@ const sendResponse = <T>(
 };
 
 export default sendResponse;
-console.log("");

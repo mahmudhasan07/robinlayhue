@@ -92,7 +92,6 @@ const getMyBookingService = (userId) => __awaiter(void 0, void 0, void 0, functi
                 }
             });
         })));
-        console.log(assignUsers);
         return {
             id: booking.id,
             status: booking.status,
