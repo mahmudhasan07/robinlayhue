@@ -62,6 +62,7 @@ const sendNotifications = async (senderId: string, req: any) => {
     select: {
       id: true,
       fcmToken: true,
+      
     },
   });
 

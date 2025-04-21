@@ -11,6 +11,7 @@ const route = Router()
 route.post("/create", auth(Role.ADMIN), fileUploader.uploadProfileImage, parseBodyMiddleware, validateRequest(WorkerValidation.createWorkerValidation), workerController.createWorkerController)
 route.get("/", auth(Role.ADMIN), workerController.getAllWorkerController)
 route.get("/myAssign", auth(Role.WORKER), workerController.myAssignController)
+route.get("/my-all-assign-service", auth(Role.WORKER), workerController.myAllAssignServiceController)
 
 route.get("/:id", auth(Role.ADMIN), workerController.singleWorkerProfileController)
 route.get("/assign/:id", auth(Role.ADMIN), workerController.singleWorkerAssignsController)

@@ -36,6 +36,13 @@ const myAssignController = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, { statusCode: StatusCodes.OK, message: "All users", data: result, success: true })
 })
 
+const myAllAssignServiceController = catchAsync(async (req: Request, res: Response) => {
+
+    const { id } = req.user
+    const result = await workerService.myAllAssignService(id)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "My All Assign Service", data: result, success: true })
+})
+
 
 const singleWorkerProfileController = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params
@@ -52,4 +59,4 @@ const singleWorkerAssignsController = catchAsync(async (req: Request, res: Respo
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Single worker assigns project", data: data, success: true, meta :{limit, page, total, totalPage} })
 })
  
-export const workerController = { createWorkerController, getAllWorkerController, myAssignController, singleWorkerProfileController, singleWorkerAssignsController }
+export const workerController = { createWorkerController, getAllWorkerController, myAssignController, singleWorkerProfileController, singleWorkerAssignsController, myAllAssignServiceController }

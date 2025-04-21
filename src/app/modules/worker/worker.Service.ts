@@ -92,6 +92,44 @@ const myAssignService = async (id: string, status: string) => {
     })
     return result
 }
+const myAllAssignService = async (id: string) => {
+
+    const result = await prisma.booking.findMany({
+        where: {
+            assigns: {
+                has: id
+            },
+        },
+        select: {
+            id: true,
+            userId: true,
+            serviceId: true,
+            date: true,
+            status: true,
+            location: true,
+            description: true,
+            userDetails: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                }
+            },
+            serviceDetails: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    price: true
+
+                }
+            }
+        }
+
+
+    })
+    return result
+}
 
 
 const singleWorkerProfile = async (id: string) => {
@@ -139,4 +177,4 @@ const workersAssign = async (id: string, status: string) => {
 
 
 
-export const workerService = { createWorker, getAllWorker, myAssignService, singleWorkerProfile, workersAssign }
+export const workerService = { createWorker, getAllWorker, myAssignService,  singleWorkerProfile, workersAssign, myAllAssignService }
