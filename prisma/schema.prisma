@@ -47,16 +47,19 @@ model Otp {
 }
 
 model Service {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  price       Float
-  image       String?
-  duration    String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  Review      Review[]
-  Booking     Booking[]
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String
+  price         Float
+  image         String?
+  duration      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Review        Review[]
+  Booking       Booking[]
+  notifications Notifications[] @relation("serviceDetails")
+
+ 
 }
 
 model Booking {
@@ -98,11 +101,14 @@ model Notifications {
   senderId   String?  @db.ObjectId
   title      String
   body       String
+  serviceId  String?  @db.ObjectId
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  service    Service? @relation("serviceDetails", fields: [serviceId], references: [id])
   receiver   User     @relation("receiverDetails", fields: [receiverId], references: [id])
   sender     User?    @relation("senderDetails", fields: [senderId], references: [id])
+
 }
 
 model Review {

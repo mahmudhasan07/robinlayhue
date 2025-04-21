@@ -6,8 +6,9 @@ import ApiError from "../../error/ApiErrors";
 import { OTPFn } from "../../helper/OTPFn";
 import OTPVerify from "../../helper/OTPVerify";
 import { StatusCodes } from "http-status-codes";
+import { prisma } from "../../../utils/prisma";
 
-const prisma = new PrismaClient();
+
 const logInFromDB = async (payload: { email: string, password: string, fcmToken?: string }) => {
     const findUser = await prisma.user.findUnique({
         where: {

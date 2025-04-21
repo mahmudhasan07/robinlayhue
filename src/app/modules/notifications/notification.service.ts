@@ -16,6 +16,7 @@ const sendSingleNotification = async (senderId: string, userId: string, payload:
 
   await prisma.notifications.create({
     data: {
+      serviceId: payload.serviceId,
       receiverId: userId,
       senderId: senderId,
       title: payload.title,
@@ -200,6 +201,20 @@ const getNotificationsFromDB = async (req: any) => {
       receiverId: req.user.id,
     },
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      title: true,
+      body: true,
+      read: true,
+      senderId: true,
+      serviceId: true,
+      createdAt: true,
+      sender: {
+        select: {
+          name: true,
+          image: true,
+      }}
+    }
   });
 
   if (notifications.length === 0) {

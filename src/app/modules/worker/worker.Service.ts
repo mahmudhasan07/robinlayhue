@@ -62,12 +62,30 @@ const myAssignService = async (id: string, status: string) => {
             },
             status: status.toUpperCase() as OrderStatus
         },
-        include: {
+        select: {
+            id: true,
+            userId: true,
+            serviceId: true,
+            date: true,
+            status: true,
+            location: true,
+            description: true,
             userDetails: {
                 select: {
+                    id: true,
                     name: true,
+                    image: true,
                 }
             },
+            serviceDetails: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    price: true
+
+                }
+            }
         }
 
 
@@ -82,24 +100,24 @@ const singleWorkerProfile = async (id: string) => {
         where: {
             id
         },
-        select : {
-            id : true,
-            name : true,
-            email : true,
-            image : true,
-            location : true
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+            location: true
         }
     })
 
     if (!myUser) {
-        throw new ApiError(StatusCodes.NOT_FOUND, "User not found") 
+        throw new ApiError(StatusCodes.NOT_FOUND, "User not found")
     }
 
 
     return myUser
 }
 
-const workersAssign = async (id : string, status : string) => {
+const workersAssign = async (id: string, status: string) => {
     const result = await prisma.booking.findMany({
         where: {
             assigns: {

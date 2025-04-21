@@ -34,6 +34,7 @@ const getAllServiceFromDB = async (review: string) => {
             price: true,
             createdAt: true,
             updatedAt: true,
+            
             Review: true
         }
     })

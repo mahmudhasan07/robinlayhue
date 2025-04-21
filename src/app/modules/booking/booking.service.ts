@@ -63,18 +63,20 @@ const getMyBookingService = async (userId: string) => {
             id: true,
             status: true,
             date: true,
-            isPaid: true,
+            isPaid: true,   
             serviceDetails: {
                 select: {
+                    id: true,
                     name: true,
                     image: true,
                     duration: true,
-                    price: true
+                    price: true,
                 }
             },
             assigns: true
         }
-    })
+    });
+ 
 
     const myService = await Promise.all(result.map(async (booking) => {
 
@@ -84,7 +86,9 @@ const getMyBookingService = async (userId: string) => {
                     id: assign
                 },
                 select: {
-                    name: true
+                    name: true,
+                    image: true,
+                    id: true,
                 }
             })
 
@@ -100,7 +104,8 @@ const getMyBookingService = async (userId: string) => {
             image: booking.serviceDetails.image,
             duration: booking.serviceDetails.duration,
             price: booking.serviceDetails.price,
-            assigns: assignUsers.flat()
+            assigns: assignUsers.flat(),
+            // assignedUsers,
         }
     }))
 

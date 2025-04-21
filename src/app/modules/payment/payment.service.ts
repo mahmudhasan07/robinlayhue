@@ -13,10 +13,36 @@ interface payloadType {
 
 const createIntentInStripe = async (payload: payloadType, userId: string) => {
 
+    let user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
 
+    if(user?.customerId == null){
+        const customer = await stripe.customers.create({
+            name: user?.name || "",
+            email: user?.email,
+        });
+       user =  await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                customerId: customer.id,
+            },
+        });
+    }
+    console.log(payload);
+
+    const attach = await stripe.paymentMethods.attach(payload.paymentMethodId, {
+        customer: user?.customerId || "",
+    })
+    console.log(attach);
     const payment = await stripe.paymentIntents.create({
         amount: Math.round(payload.amount * 100),
         currency: payload?.paymentMethod || "usd",
+        customer: user?.customerId || "",
         payment_method: payload.paymentMethodId,
         confirm: true,
         automatic_payment_methods: {
@@ -24,6 +50,8 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
             allow_redirects: "never",
         },
     });
+
+ 
     
 
     if (payment.status !== "succeeded") {
