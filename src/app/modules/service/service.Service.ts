@@ -156,6 +156,10 @@ const deleteServiceFromDB = async (id: string) => {
 
 
 const searchServiceFromDB = async (name: string) => {
+
+    console.log(name);
+    
+
     const result = await prisma.service.findMany({
         where: {
             name: {

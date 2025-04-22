@@ -67,6 +67,7 @@ const myAssignService = async (id: string, status: string) => {
             userId: true,
             serviceId: true,
             date: true,
+            time : true,
             status: true,
             location: true,
             description: true,

@@ -45,7 +45,7 @@ const deleteServiceController = catchAsync(async (req: Request, res: Response) =
 })
 
 const searchServiceController = catchAsync(async (req: Request, res: Response) => {
-    const name = req.query.name as string
+    const name = req.params.name as string 
 
     const result = await serviceServices.searchServiceFromDB(name)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Service found successfully", data: result, success: true })

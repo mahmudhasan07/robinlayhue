@@ -15,5 +15,5 @@ route.get("/", auth(), ServiceController.getAllServiceController)
 route.get("/:id", auth(), ServiceController.getSingleServiceController)
 route.put("/:id", auth(Role.ADMIN), fileUploader.serviceImage, parseBodyMiddleware, validateRequest(ServiceValidation.serviceUpdateValidation), ServiceController.updateServiceController)
 route.delete("/:id", auth(Role.ADMIN), ServiceController.deleteServiceController)
-route.get("/searchService", auth(), ServiceController.searchServiceController )
+route.get("/searchService/:name", auth(), ServiceController.searchServiceController )
 export const serviceRoutes = route

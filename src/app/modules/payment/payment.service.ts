@@ -33,12 +33,9 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
             },
         });
     }
-    console.log(payload);
-
     const attach = await stripe.paymentMethods.attach(payload.paymentMethodId, {
         customer: user?.customerId || "",
     })
-    console.log(attach);
     const payment = await stripe.paymentIntents.create({
         amount: Math.round(payload.amount * 100),
         currency: payload?.paymentMethod || "usd",
@@ -49,10 +46,7 @@ const createIntentInStripe = async (payload: payloadType, userId: string) => {
             enabled: true,
             allow_redirects: "never",
         },
-    });
-
- 
-    
+    });    
 
     if (payment.status !== "succeeded") {
         throw new ApiError(StatusCodes.BAD_REQUEST, "Payment failed");
