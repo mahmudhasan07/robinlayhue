@@ -9,7 +9,7 @@ import admin from "../../helper/firebaseAdmin";
 
 // Send notification to a single user
 const sendSingleNotification = async (senderId: string, receiverId: string, payload: any) => {
-  
+
   const user = await prisma.user.findUnique({
     where: { id: receiverId },
   });
@@ -252,10 +252,7 @@ const getNotificationsFromDB1 = async (
   };
 };
 
-const getNotificationsFromDB = async (id : string) => {
-
-  console.log(id);
-  
+const getNotificationsFromDB = async (id: string) => {
 
   const notifications = await prisma.notifications.findMany({
     where: {
@@ -276,15 +273,15 @@ const getNotificationsFromDB = async (id : string) => {
           image: true,
         }
       },
-      bookingDetails : {
-        select : {
-          serviceDetails : {
-            select : {
-              name : true,
-              id : true,
-              image : true
+      bookingDetails: {
+        select: {
+          serviceDetails: {
+            select: {
+              name: true,
+              id: true,
+              image: true
             }
-          }
+          },
         }
       }
     }
