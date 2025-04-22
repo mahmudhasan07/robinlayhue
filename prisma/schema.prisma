@@ -47,17 +47,16 @@ model Otp {
 }
 
 model Service {
-  id            String          @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  description   String
-  price         Float
-  image         String?
-  duration      String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  Review        Review[]
-  Booking       Booking[]
-  notifications Notifications[] @relation("serviceDetails")
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  price       Float
+  image       String?
+  duration    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Review      Review[]
+  Booking     Booking[]
 }
 
 model Booking {
@@ -80,6 +79,7 @@ model Booking {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   Payment        Payment[]
+  Notifications Notifications[]
 }
 
 model Payment {
@@ -95,18 +95,18 @@ model Payment {
 }
 
 model Notifications {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  receiverId String   @db.ObjectId
-  senderId   String?  @db.ObjectId
-  title      String
-  body       String
-  serviceId  String?  @db.ObjectId
-  read       Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  service    Service? @relation("serviceDetails", fields: [serviceId], references: [id])
-  receiver   User     @relation("receiverDetails", fields: [receiverId], references: [id])
-  sender     User?    @relation("senderDetails", fields: [senderId], references: [id])
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  receiverId     String   @db.ObjectId
+  senderId       String?  @db.ObjectId
+  title          String
+  body           String
+  serviceId      String?  @db.ObjectId
+  read           Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  bookingDetails Booking? @relation( fields: [serviceId], references: [id])
+  receiver       User     @relation("receiverDetails", fields: [receiverId], references: [id])
+  sender         User?    @relation("senderDetails", fields: [senderId], references: [id])
 }
 
 model Review {

@@ -275,6 +275,17 @@ const getNotificationsFromDB = async (id : string) => {
           name: true,
           image: true,
         }
+      },
+      bookingDetails : {
+        select : {
+          serviceDetails : {
+            select : {
+              name : true,
+              id : true,
+              image : true
+            }
+          }
+        }
       }
     }
   });

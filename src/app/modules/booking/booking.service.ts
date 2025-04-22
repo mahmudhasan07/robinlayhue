@@ -45,6 +45,7 @@ const getAllBookingByStatus = async (payload: { status: OrderStatus }) => {
             details: booking.description,
             paid: booking.isPaid,
             date: booking.date,
+            time: booking.time,
             name: booking.userDetails.name,
             email: booking.userDetails.email,
             serviceName: booking.serviceDetails.name,
@@ -64,6 +65,7 @@ const getMyBookingService = async (userId: string) => {
             id: true,
             status: true,
             date: true,
+            time : true,
             isPaid: true,
             serviceDetails: {
                 select: {
@@ -103,6 +105,7 @@ const getMyBookingService = async (userId: string) => {
             status: booking.status,
             date: booking.date,
             paid: booking.isPaid,
+            time: booking.time,
             name: booking.serviceDetails.name,
             image: booking.serviceDetails.image,
             duration: booking.serviceDetails.duration,
@@ -115,7 +118,6 @@ const getMyBookingService = async (userId: string) => {
     return myService
 }
 
-
 const getSingleBooking = async (id: string) => {
 
     const booking = await prisma.booking.findUnique({
@@ -126,6 +128,7 @@ const getSingleBooking = async (id: string) => {
             id: true,
             status: true,
             date: true,
+            time: true,
             isPaid: true,
             serviceDetails: {
                 select: {
@@ -155,9 +158,7 @@ const getSingleBooking = async (id: string) => {
                 id: true,
             }
         })
-
         return findUser
-
     }))
 
     return {
@@ -165,6 +166,7 @@ const getSingleBooking = async (id: string) => {
         status: booking?.status,
         date: booking?.date,
         paid: booking?.isPaid,
+        time: booking?.time,
         name: booking?.serviceDetails?.name,
         image: booking?.serviceDetails.image,
         duration: booking?.serviceDetails.duration,
