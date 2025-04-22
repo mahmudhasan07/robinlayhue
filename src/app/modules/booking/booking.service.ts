@@ -2,6 +2,7 @@ import { Booking, OrderStatus } from "@prisma/client"
 import { prisma } from "../../../utils/prisma"
 import ApiError from "../../error/ApiErrors"
 import { StatusCodes } from "http-status-codes"
+import { notificationServices } from "../notifications/notification.service"
 
 const createBooking = async (payload: Booking, id: string) => {
     const result = await prisma.booking.create({
@@ -13,7 +14,7 @@ const createBooking = async (payload: Booking, id: string) => {
     return result
 }
 
-const getAllBookingByStatus = async ( payload: { status: OrderStatus }) => {
+const getAllBookingByStatus = async (payload: { status: OrderStatus }) => {
     const result = await prisma.booking.findMany({
         where: {
             status: payload.status.toUpperCase() as OrderStatus
@@ -63,7 +64,7 @@ const getMyBookingService = async (userId: string) => {
             id: true,
             status: true,
             date: true,
-            isPaid: true,   
+            isPaid: true,
             serviceDetails: {
                 select: {
                     id: true,
@@ -76,12 +77,15 @@ const getMyBookingService = async (userId: string) => {
             assigns: true
         }
     });
- 
+
 
     const myService = await Promise.all(result.map(async (booking) => {
 
+        if (!booking) {
+            throw new ApiError(StatusCodes.NON_AUTHORITATIVE_INFORMATION, "Booking not found");
+        }
         const assignUsers = await Promise.all(booking.assigns.map(async (assign) => {
-            return await prisma.user.findMany({
+            return await prisma.user.findUnique({
                 where: {
                     id: assign
                 },
@@ -92,9 +96,8 @@ const getMyBookingService = async (userId: string) => {
                 }
             })
 
-
         }))
-        
+
         return {
             id: booking.id,
             status: booking.status,
@@ -104,7 +107,7 @@ const getMyBookingService = async (userId: string) => {
             image: booking.serviceDetails.image,
             duration: booking.serviceDetails.duration,
             price: booking.serviceDetails.price,
-            assigns: assignUsers.flat(),
+            assigns: assignUsers,
             // assignedUsers,
         }
     }))
@@ -112,16 +115,65 @@ const getMyBookingService = async (userId: string) => {
     return myService
 }
 
+
 const getSingleBooking = async (id: string) => {
-    const result = await prisma.booking.findUnique({
+
+    const booking = await prisma.booking.findUnique({
         where: {
             id: id
+        },
+        select: {
+            id: true,
+            status: true,
+            date: true,
+            isPaid: true,
+            serviceDetails: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    duration: true,
+                    price: true,
+                }
+            },
+            assigns: true
         }
     })
-    return result
+
+    if (!booking) {
+        throw new ApiError(StatusCodes.NON_AUTHORITATIVE_INFORMATION, "Booking not found");
+    }
+
+    const assignUsers = await Promise.all(booking.assigns.map(async (assign) => {
+
+        const findUser= await prisma.user.findUnique({
+            where: {
+                id: assign
+            },
+            select: {
+                name: true,
+                id: true,
+            }
+        })
+
+        return findUser
+
+    }))
+
+    return {
+        id: booking?.id,
+        status: booking?.status,
+        date: booking?.date,
+        paid: booking?.isPaid,
+        name: booking?.serviceDetails?.name,
+        image: booking?.serviceDetails.image,
+        duration: booking?.serviceDetails.duration,
+        price: booking?.serviceDetails.price,
+        assigns: assignUsers.flat(),
+    }
 }
 
-const assignServiceToBooking = async (payload: { bookingId: string, assigns: string[] }) => {
+const assignServiceToBooking = async (payload: { bookingId: string, assigns: string[] }, id: string) => {
 
     try {
         const result = await prisma.booking.update({
@@ -133,6 +185,10 @@ const assignServiceToBooking = async (payload: { bookingId: string, assigns: str
                 status: "PROGRESSING"
             }
         })
+
+        const senderId = id
+
+        await notificationServices.multipleUserNotification(senderId, payload)
 
         return result
     } catch {

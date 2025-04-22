@@ -6,6 +6,7 @@ import { bookingRoutes } from "../modules/booking/booking.routes"
 import { workerRoutes } from "../modules/worker/worker.Routes"
 import { paymentRoutes } from "../modules/payment/payment.routes"
 import { reviewRoutes } from "../modules/review/review.Routes"
+import { NotificationsRouters } from "../modules/notifications/notification.routes"
 // import { foodRoutes } from "../modules/foods/foods.Routes"
 // import { locationRoutes } from "../modules/location/location.Routes"
 
@@ -38,6 +39,10 @@ const routes = [
     {
         path: "/review",
         component: reviewRoutes
+    },
+    {
+        path: "/notifications",
+        component: NotificationsRouters
     },
 ]
 

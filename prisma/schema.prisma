@@ -58,8 +58,6 @@ model Service {
   Review        Review[]
   Booking       Booking[]
   notifications Notifications[] @relation("serviceDetails")
-
- 
 }
 
 model Booking {
@@ -69,6 +67,7 @@ model Booking {
   date           DateTime
   description    String
   location       String
+  time           String      @default("4.00 pm")
   latitude       Float?
   longitude      Float?
   isPaid         Boolean     @default(false)
@@ -108,7 +107,6 @@ model Notifications {
   service    Service? @relation("serviceDetails", fields: [serviceId], references: [id])
   receiver   User     @relation("receiverDetails", fields: [receiverId], references: [id])
   sender     User?    @relation("senderDetails", fields: [senderId], references: [id])
-
 }
 
 model Review {

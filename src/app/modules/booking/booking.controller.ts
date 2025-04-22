@@ -31,6 +31,13 @@ const getAllBookingController = catchAsync(async (req: Request, res: Response) =
 
 // })
 
+
+const singleBookingController = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params
+    const result = await bookingService.getSingleBooking(id)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking fetched successfully", data: result, success: true })
+})
+
 const myBookingController = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.user
     const result = await bookingService.getMyBookingService(id)
@@ -39,7 +46,8 @@ const myBookingController = catchAsync(async (req: Request, res: Response) => {
 
 const assignBookingController = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body
-    const result = await bookingService.assignServiceToBooking(payload)
+    const { id } = req.user
+    const result = await bookingService.assignServiceToBooking(payload, id)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Booking updated successfully", data: result, success: true })
 })
 
@@ -53,4 +61,4 @@ const completeBookingController = catchAsync(async (req: Request, res: Response)
 
 
 
-export const bookingController = { createBookingController, getAllBookingController, myBookingController, assignBookingController, completeBookingController }
+export const bookingController = { createBookingController, getAllBookingController, myBookingController, assignBookingController, completeBookingController, singleBookingController }

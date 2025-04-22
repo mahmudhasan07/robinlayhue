@@ -6,12 +6,12 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../middleware/sendResponse";
 
 const sendNotification = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.id;
+  const receiverId = req.params.id;
   const payload = req.body;
   const senderId = req.user.id;
   const notification = await notificationServices.sendSingleNotification(
     senderId,
-    userId,
+    receiverId,
     payload
   );
   sendResponse(res, {
@@ -23,9 +23,9 @@ const sendNotification = catchAsync(async (req: Request, res: Response) => {
 });
 
 const sendNotifications = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user.id;
+  const receiverId = req.user.id;
   const notifications = await notificationServices.sendNotifications(
-    userId,
+    receiverId,
     req
   );
 
@@ -52,8 +52,11 @@ const sendNotifications = catchAsync(async (req: Request, res: Response) => {
 //   });
 // });
 
-const getNotifications = catchAsync(async (req: any, res: any) => {
-  const notifications = await notificationServices.getNotificationsFromDB(req);
+const getNotifications = catchAsync(async (req: Request, res: Response) => {
+
+  const {id} = req.user
+
+  const notifications = await notificationServices.getNotificationsFromDB(id);
 
   sendResponse(res, {
     statusCode: 200,

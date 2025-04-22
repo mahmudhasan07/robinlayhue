@@ -8,11 +8,11 @@ import auth from '../../middleware/auth';
 const router = express.Router();
 
 router.post(
-  "/send-notification/:userId",
+  "/send-notification/:id",
   validateRequest(NotificationValidation.cerateNotification),
   auth(),
   notificationController.sendNotification
-);
+);  
 
 router.post(
   "/send-notification",

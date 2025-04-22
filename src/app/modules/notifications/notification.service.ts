@@ -8,16 +8,16 @@ import admin from "../../helper/firebaseAdmin";
 // import prisma from "../../utilis/prisma";
 
 // Send notification to a single user
-const sendSingleNotification = async (senderId: string, userId: string, payload: any) => {
+const sendSingleNotification = async (senderId: string, receiverId: string, payload: any) => {
+  
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: receiverId },
   });
-
 
   await prisma.notifications.create({
     data: {
-      serviceId: payload.serviceId,
-      receiverId: userId,
+      serviceId: payload.bookingId,
+      receiverId: receiverId,
       senderId: senderId,
       title: payload.title,
       body: payload.body,
@@ -26,7 +26,8 @@ const sendSingleNotification = async (senderId: string, userId: string, payload:
 
 
   if (!user?.fcmToken) {
-    throw new ApiError(404, "User not found with FCM token");
+    // throw new ApiError(404, "User not found with FCM token");
+    return
   }
 
   const message = {
@@ -36,9 +37,6 @@ const sendSingleNotification = async (senderId: string, userId: string, payload:
     },
     token: user.fcmToken,
   };
-
-
-
   try {
     const response = await admin.messaging().send(message);
     return response;
@@ -53,6 +51,63 @@ const sendSingleNotification = async (senderId: string, userId: string, payload:
   }
 };
 
+
+const multipleUserNotification = async (senderId: string, payload: { bookingId: string, assigns: string[] }) => {
+  const users = await prisma.user.findMany({
+    where: {
+      id: { in: payload.assigns },
+      fcmToken: {},
+    },
+    select: {
+      id: true,
+      fcmToken: true,
+    },
+  });
+
+  const title = "New project assign";
+  const body = "Admin assign you a new project";
+
+  for (const user of users) {
+
+    await prisma.notifications.create({
+      data: {
+        serviceId: payload.bookingId,
+        receiverId: user.id,
+        senderId: senderId,
+        title: title,
+        body: body,
+      },
+    });
+
+
+    if (!user?.fcmToken) {
+      // throw new ApiError(404, "User not found with FCM token");
+      return
+    }
+
+    const message = {
+      notification: {
+        title: title,
+        body: body,
+      },
+      token: user.fcmToken,
+    };
+    try {
+      const response = await admin.messaging().send(message);
+      return response;
+    } catch (error: any) {
+      if (error.code === "messaging/invalid-registration-token") {
+        throw new ApiError(400, "Invalid FCM registration token");
+      } else if (error.code === "messaging/registration-token-not-registered") {
+        throw new ApiError(404, "FCM token is no longer registered");
+      } else {
+        throw new ApiError(500, "Failed to send notification");
+      }
+    }
+  }
+
+}
+
 // Send notifications to all users with valid FCM tokens
 const sendNotifications = async (senderId: string, req: any) => {
   const users = await prisma.user.findMany({
@@ -62,7 +117,7 @@ const sendNotifications = async (senderId: string, req: any) => {
     select: {
       id: true,
       fcmToken: true,
-      
+
     },
   });
 
@@ -74,6 +129,7 @@ const sendNotifications = async (senderId: string, req: any) => {
 
   const message = {
     notification: {
+      bookingId: req.body.bookingId,
       title: req.body.title,
       body: req.body.body,
     },
@@ -196,10 +252,14 @@ const getNotificationsFromDB1 = async (
   };
 };
 
-const getNotificationsFromDB = async (req: any) => {
+const getNotificationsFromDB = async (id : string) => {
+
+  console.log(id);
+  
+
   const notifications = await prisma.notifications.findMany({
     where: {
-      receiverId: req.user.id,
+      receiverId: id,
     },
     orderBy: { createdAt: "desc" },
     select: {
@@ -214,7 +274,8 @@ const getNotificationsFromDB = async (req: any) => {
         select: {
           name: true,
           image: true,
-      }}
+        }
+      }
     }
   });
 
@@ -263,4 +324,5 @@ export const notificationServices = {
   sendNotifications,
   getNotificationsFromDB,
   getSingleNotificationFromDB,
+  multipleUserNotification
 };
