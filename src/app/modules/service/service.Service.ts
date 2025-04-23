@@ -34,7 +34,7 @@ const getAllServiceFromDB = async (review: string) => {
             price: true,
             createdAt: true,
             updatedAt: true,
-            
+
             Review: true
         }
     })
@@ -157,19 +157,36 @@ const deleteServiceFromDB = async (id: string) => {
 
 const searchServiceFromDB = async (name: string) => {
 
-    console.log(name);
-    
-
     const result = await prisma.service.findMany({
         where: {
             name: {
                 contains: name,
                 mode: 'insensitive'
             }
+        },
+        include: {
+            Review: true
         }
     })
 
-    return result
+
+    const avgReview = result.map((item) => {
+        const avgReview = item.Review.reduce((acc, curr) => acc + curr.rating, 0) / item.Review.length
+        return {
+            id: item.id,
+            name: item.name,
+            image: item.image,
+            price: item.price,
+            duration: item.duration,
+            description: item.description,
+            Review: avgReview,
+            totalReview: item.Review.length,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+        }
+    })
+
+    return avgReview
 }
 
 
