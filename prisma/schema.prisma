@@ -63,7 +63,7 @@ model Booking {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   userId         String   @db.ObjectId
   serviceId      String   @db.ObjectId
-  date           String
+  date           DateTime
   description    String
   location       String
   time           String   @default("4.00 pm")
