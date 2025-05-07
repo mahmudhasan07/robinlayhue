@@ -55,33 +55,34 @@ model Service {
   duration    String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  Review      Review[]
-  Booking     Booking[]
+  Review      Review[]  @relation("ServiceToReview")
+  Booking     Booking[] @relation("ServiceToBooking")
 }
 
 model Booking {
-  id             String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String      @db.ObjectId
-  serviceId      String      @db.ObjectId
-  date           DateTime
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String   @db.ObjectId
+  serviceId      String   @db.ObjectId
+  date           String
   description    String
   location       String
-  time           String      @default("4.00 pm")
+  time           String   @default("4.00 pm")
   latitude       Float?
   longitude      Float?
-  isPaid         Boolean     @default(false)
-  assigns        String[]    @default([])
+  isPaid         Boolean  @default(false)
+  assigns        String[] @default([])
   // paymentId      String?     @db.ObjectId
-  serviceDetails Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceDetails Service  @relation("ServiceToBooking", fields: [serviceId], references: [id], onDelete: Cascade)
+
   // paymentDetails Payment?    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  userDetails    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  status         OrderStatus @default(PENDING)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  Payment        Payment[]
+  userDetails   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status        OrderStatus     @default(PENDING)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Payment       Payment[]
   Notifications Notifications[]
 }
-
+  
 model Payment {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   userId          String   @db.ObjectId
@@ -104,7 +105,7 @@ model Notifications {
   read           Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  bookingDetails Booking? @relation( fields: [serviceId], references: [id])
+  bookingDetails Booking? @relation(fields: [serviceId], references: [id])
   receiver       User     @relation("receiverDetails", fields: [receiverId], references: [id])
   sender         User?    @relation("senderDetails", fields: [senderId], references: [id])
 }
@@ -115,7 +116,7 @@ model Review {
   serviceId      String   @db.ObjectId
   rating         Float
   comment        String?
-  serviceDetails Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceDetails Service  @relation("ServiceToReview", fields: [serviceId], references: [id], onDelete: Cascade)
   userDetails    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

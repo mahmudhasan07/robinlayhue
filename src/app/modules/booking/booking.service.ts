@@ -33,11 +33,31 @@ const getAllBookingByStatus = async (payload: { status: OrderStatus }) => {
                     duration: true
 
                 }
-            }
+            },
         }
     })
 
+
+    const assigns = await Promise.all(result.map(async (booking) => {
+        const assignUsers = await Promise.all(booking.assigns.map(async (assign) => {
+            return await prisma.user.findMany({
+                where: {
+                    id: assign
+                },
+                select: {
+                    name: true,
+                    image: true,
+                    id: true,
+                }
+            })
+        }))
+        return assignUsers
+    })
+
+    )
+
     const allBooking = result.map((booking) => {
+
         return {
             id: booking.id,
             status: booking.status,
@@ -65,7 +85,7 @@ const getMyBookingService = async (userId: string) => {
             id: true,
             status: true,
             date: true,
-            time : true,
+            time: true,
             isPaid: true,
             serviceDetails: {
                 select: {
@@ -149,7 +169,7 @@ const getSingleBooking = async (id: string) => {
 
     const assignUsers = await Promise.all(booking.assigns.map(async (assign) => {
 
-        const findUser= await prisma.user.findUnique({
+        const findUser = await prisma.user.findUnique({
             where: {
                 id: assign
             },

@@ -15,6 +15,7 @@ const app = express();
 export const corsOptions = {
     origin: [
         "http://localhost:3000",
+        "http://10.0.20.62:3000",
         "https://robinlayhue-dashboard.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],

@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes"
 import { prisma } from "../../../utils/prisma"
 import ApiError from "../../error/ApiErrors"
 import { getImageUrl } from "../../helper/uploadFile"
+import { log } from "console"
 
 const createServiceIntoDB = async (payload: any, image: Express.MulterS3.File) => {
 
@@ -32,9 +33,10 @@ const getAllServiceFromDB = async (review: string) => {
             name: true,
             image: true,
             price: true,
+            description: true,
+            duration: true,
             createdAt: true,
             updatedAt: true,
-
             Review: true
         }
     })
@@ -49,6 +51,9 @@ const getAllServiceFromDB = async (review: string) => {
             image: item.image,
             createdAt: item.createdAt,
             price: item.price,
+            description: item.description,
+            duration: item.duration,
+            
             updatedAt: item.updatedAt,
             Review: avgReview,
             totalReview: item.Review.length
@@ -64,6 +69,9 @@ const getAllServiceFromDB = async (review: string) => {
 }
 
 const getSingleServiceFromDB = async (id: string) => {
+
+    console.log(id, "id")
+
     const result = await prisma.service.findUnique({
         where: {
             id
@@ -110,6 +118,9 @@ const getSingleServiceFromDB = async (id: string) => {
 
 
     const { Review, ...withoutReview } = result
+
+    console.log("withoutReview", withoutReview);
+    
 
 
 

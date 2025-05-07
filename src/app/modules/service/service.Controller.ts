@@ -34,7 +34,7 @@ const updateServiceController = catchAsync(async (req: Request, res: Response) =
     const image = req.file as any
 
     const result = await serviceServices.updateServiceIntoDB(id, body, image)
-    sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Service created successfully", data: result, success: true })
+    sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Service updated successfully", data: result, success: true })
 })
 
 const deleteServiceController = catchAsync(async (req: Request, res: Response) => {
